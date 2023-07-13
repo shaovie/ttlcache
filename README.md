@@ -11,7 +11,7 @@ func main() {
 		ttlcache.SetBucketsMapPreAllocSize(256),
 		ttlcache.SetCleanInterval(10),
 	)
-	cache.Set("ttlcache", "nb", 1)
+	cache.Set("ttlcache", "nb", 1/*second*/) // The lifecycle is 1 second
 	val, found := cache.Get("ttlcache")
 	if !found {
 		fmt.Println("set val error")
