@@ -21,21 +21,21 @@ func setOptions(optL ...Option) *Options {
 	return opts
 }
 
-func SetBucketsCount(v int) Option {
+func BucketsCount(v int) Option {
 	return func(o *Options) {
 		if v > 0 {
 			o.bucketsCount = v
 		}
 	}
 }
-func SetBucketsMapPreAllocSize(v int) Option {
+func BucketsMapPreAllocSize(v int) Option {
 	return func(o *Options) {
 		if v > 0 {
 			o.bucketsMapPreAllocSize = v
 		}
 	}
 }
-func SetCleanInterval(v int) Option {
+func CleanInterval(v int) Option {
 	return func(o *Options) {
 		if v > 0 {
 			o.cleanInterval = v

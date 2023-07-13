@@ -88,9 +88,9 @@ func BenchmarkLive(b *testing.B) {
 func BenchmarkSetGet(b *testing.B) {
 	fmt.Println("hello boy")
 	runtime.GOMAXPROCS(runtime.NumCPU() * 2)
-	cache := New(SetBucketsCount(512),
-		SetBucketsMapPreAllocSize(256),
-		SetCleanInterval(10),
+	cache := New(BucketsCount(512),
+		BucketsMapPreAllocSize(256),
+		CleanInterval(10),
 	)
 
 	var wg sync.WaitGroup
@@ -106,9 +106,9 @@ func BenchmarkSetGet(b *testing.B) {
 	wg.Wait()
 }
 func TestAll(t *testing.T) {
-	cache := New(SetBucketsCount(512),
-		SetBucketsMapPreAllocSize(256),
-		SetCleanInterval(10),
+	cache := New(BucketsCount(512),
+		BucketsMapPreAllocSize(256),
+		CleanInterval(10),
 	)
 	cache.Set("ttlcache", "nb", 1)
 	val, found := cache.Get("ttlcache")
