@@ -7,9 +7,9 @@ Usage:
 import "github.com/shaovie/ttlcache"
 
 func main() {
-	cache := ttlcache.New(ttlcache.SetBucketsCount(512),
-		ttlcache.SetBucketsMapPreAllocSize(256),
-		ttlcache.SetCleanInterval(10),
+	cache := ttlcache.New(ttlcache.BucketsCount(512),
+		ttlcache.BucketsMapPreAllocSize(256),
+		ttlcache.CleanInterval(10),
 	)
 	cache.Set("ttlcache", "nb", 1/*second*/) // The lifecycle is 1 second
 	val, found := cache.Get("ttlcache")
