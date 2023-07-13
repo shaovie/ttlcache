@@ -6,6 +6,7 @@ Usage:
 ```
 import "github.com/shaovie/ttlcache"
 
+func main() {
 	cache := ttlcache.New(ttlcache.SetBucketsCount(512),
 		ttlcache.SetBucketsMapPreAllocSize(256),
 		ttlcache.SetCleanInterval(10),
@@ -16,6 +17,7 @@ import "github.com/shaovie/ttlcache"
 		fmt.Println("set val error")
 		return
 	}
+}
 ```
 
 Usage Reference: `ttlcache_bench_test.go`
