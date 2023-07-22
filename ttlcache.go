@@ -7,6 +7,8 @@ import (
 	xxhash "github.com/cespare/xxhash/v2"
 )
 
+// TTLCache is an in-process object caching library designed specifically for managing the caching
+// and automatic release of objects with lifecycles
 type TTLCache struct {
 	bucketsCount uint64
 	timeCached   atomic.Int64 // millisecond
@@ -14,6 +16,7 @@ type TTLCache struct {
 	janitor      *janitor
 }
 
+// New return an ttlcache instance
 func New(opts ...Option) *TTLCache {
 	opt := setOptions(opts...)
 	c := &TTLCache{
@@ -29,7 +32,7 @@ func New(opts ...Option) *TTLCache {
 	return c
 }
 
-// Add an item to the cache, replacing any existing item.
+// Set add an item to the cache, replacing any existing item.
 //
 // ttl is in seconds, must > 0,
 func (c *TTLCache) Set(k string, x any, ttl int64) {
@@ -41,7 +44,7 @@ func (c *TTLCache) Set(k string, x any, ttl int64) {
 	c.buckets[idx].set(k, x, c.timeCached.Load()+ttl*1000)
 }
 
-// Set item expire, Return false if item not found or had expired
+// Expire set item expire, Return false if item not found or had expired
 //
 // ttl is in seconds, must > 0,
 func (c *TTLCache) Expire(k string, ttl int64) bool {
@@ -54,7 +57,7 @@ func (c *TTLCache) Expire(k string, ttl int64) bool {
 	return c.buckets[idx].expire(k, now, now+ttl*1000)
 }
 
-// Add an item to the cache only if an item doesn't already exist for the given
+// Add add an item to the cache only if an item doesn't already exist for the given
 // key, or if the existing item has expired. Returns an error otherwise.
 //
 // ttl is in seconds, must > 0,
@@ -68,7 +71,7 @@ func (c *TTLCache) Add(k string, x any, ttl int64) bool {
 	return c.buckets[idx].add(k, x, now, now+ttl*1000)
 }
 
-// Set a new value for the cache key only if it already exists, and the existing
+// Replace set a new value for the cache key only if it already exists, and the existing
 // item hasn't expired. Returns false otherwise.
 //
 // ttl is in seconds, must > 0,
@@ -82,7 +85,7 @@ func (c *TTLCache) Replace(k string, x any, ttl int64) bool {
 	return c.buckets[idx].replace(k, x, now, now+ttl*1000)
 }
 
-// Get an item from the cache. Returns the item or nil, and a bool indicating
+// Get get an item from the cache. Returns the item or nil, and a bool indicating
 // whether the key was found.
 func (c *TTLCache) Get(k string) (any, bool) {
 	h := xxhash.Sum64String(k)
@@ -90,7 +93,7 @@ func (c *TTLCache) Get(k string) (any, bool) {
 	return c.buckets[idx].get(k, c.timeCached.Load())
 }
 
-// Pop gets an item from the cache and deletes it.
+// Pop pop gets an item from the cache and deletes it.
 //
 // The bool return indicates if the item was set.
 func (c *TTLCache) Pop(k string) (any, bool) {
@@ -99,14 +102,14 @@ func (c *TTLCache) Pop(k string) (any, bool) {
 	return c.buckets[idx].pop(k, c.timeCached.Load())
 }
 
-// Return the keys exists or not
+// Exist return the keys exists or not
 func (c *TTLCache) Exist(k string) bool {
 	h := xxhash.Sum64String(k)
 	idx := h % c.bucketsCount
 	return c.buckets[idx].exists(k, c.timeCached.Load())
 }
 
-// Increment an item of type int by n. Returns false if the item's value is
+// IncrementInt an item of type int by n. Returns false if the item's value is
 // not an int. If there is no error, the incremented value is returned.
 //
 // ttl is in seconds, must > 0,
@@ -121,7 +124,7 @@ func (c *TTLCache) IncrementInt(k string, n int, ttl int64) (int, bool) {
 	return c.buckets[idx].incrementInt(k, n, now, now+ttl*1000)
 }
 
-// Increment an item of type int64 by n. Returns false if the item's value is
+// IncrementInt64 an item of type int64 by n. Returns false if the item's value is
 // not an int64. If there is no error, the incremented value is returned.
 //
 // ttl is in seconds, must > 0,
@@ -136,7 +139,7 @@ func (c *TTLCache) IncrementInt64(k string, n int64, ttl int64) (int64, bool) {
 	return c.buckets[idx].incrementInt64(k, n, now, now+ttl*1000)
 }
 
-// Increment an item of type float64 by n. Returns false if the item's value
+// IncrementFloat64 an item of type float64 by n. Returns false if the item's value
 // is not an float64. If there is no error, the incremented value is returned.
 //
 // ttl is in seconds, must > 0,
@@ -158,6 +161,7 @@ func (c *TTLCache) Delete(k string) {
 	c.buckets[idx].delete(k)
 }
 
+// Items return cached objects(include expired)
 func (c *TTLCache) Items() int {
 	n := 0
 	for i := 0; i < len(c.buckets); i++ {

@@ -1,11 +1,13 @@
 package ttlcache
 
+// Options provides all optional parameters
 type Options struct {
 	bucketsCount           int
 	bucketsMapPreAllocSize int
 	cleanInterval          int // seconds
 }
 
+// Option function
 type Option func(*Options)
 
 func setOptions(optL ...Option) *Options {
@@ -21,6 +23,7 @@ func setOptions(optL ...Option) *Options {
 	return opts
 }
 
+// BucketsCount can effectively reduce the number of competing occurrences in concurrent access to ttlcache.
 func BucketsCount(v int) Option {
 	return func(o *Options) {
 		if v > 0 {
@@ -28,6 +31,8 @@ func BucketsCount(v int) Option {
 		}
 	}
 }
+
+// BucketsMapPreAllocSize map prealloc size
 func BucketsMapPreAllocSize(v int) Option {
 	return func(o *Options) {
 		if v > 0 {
@@ -35,6 +40,8 @@ func BucketsMapPreAllocSize(v int) Option {
 		}
 	}
 }
+
+// CleanInterval cleans up expired object cycles.
 func CleanInterval(v int) Option {
 	return func(o *Options) {
 		if v > 0 {
