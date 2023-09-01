@@ -1,4 +1,4 @@
-module ttlcache
+module github.com/shaovie/ttlcache
 
 go 1.19
 
