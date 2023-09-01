@@ -26,26 +26,29 @@ func setOptions(optL ...Option) *Options {
 // BucketsCount can effectively reduce the number of competing occurrences in concurrent access to ttlcache.
 func BucketsCount(v int) Option {
 	return func(o *Options) {
-		if v > 0 {
-			o.bucketsCount = v
+		if v < 1 {
+			panic("BucketsCount: param is illegal")
 		}
+		o.bucketsCount = v
 	}
 }
 
 // BucketsMapPreAllocSize map prealloc size
 func BucketsMapPreAllocSize(v int) Option {
 	return func(o *Options) {
-		if v > 0 {
-			o.bucketsMapPreAllocSize = v
+		if v < 1 {
+			panic("BucketsMapPreAllocSize: param is illegal")
 		}
+		o.bucketsMapPreAllocSize = v
 	}
 }
 
 // CleanInterval cleans up expired object cycles.
 func CleanInterval(v int) Option {
 	return func(o *Options) {
-		if v > 0 {
-			o.cleanInterval = v
+		if v < 1 {
+			panic("CleanInterval: param is illegal")
 		}
+		o.cleanInterval = v
 	}
 }
