@@ -17,6 +17,11 @@ func main() {
 		fmt.Println("set val error")
 		return
 	}
+	time.Sleep(time.Millisecond * 1500)
+	_, found = cache.Get("ttlcache")
+	if !found {
+		fmt.Println("expired")
+	}
 }
 ```
 
